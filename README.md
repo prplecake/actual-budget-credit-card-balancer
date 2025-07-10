@@ -1,16 +1,20 @@
 # Actual Budget Credit Card Balancer
 
-For those now using [Actual Budget][ab] after getting used to YNAB's way of handling
-Credit Cards, this script may help you.
+For those now using [Actual Budget][ab] after getting used to YNAB's way of
+handling Credit Cards, this script may help you.
 
 **This script does not modify or write to the budget in any way.**
 
 [ab]:https://actualbudget.com/
 
+## Requirements
+
+* [Bun](https://bun.sh/)
+
 ## Usage
 
 ```shell
-yarn ts-node balance-ccs.ts
+bun run balance-ccs.ts
 ```
 
 Output is similar to:
