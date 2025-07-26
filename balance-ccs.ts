@@ -9,10 +9,35 @@ const BUDGET_SYNC_ID = process.env.BUDGET_SYNC_ID;
 const BUDGET_PASSWORD = process.env.BUDGET_PASSWORD;
 const CATEGORY_GROUP_NAME = process.env.CATEGORY_GROUP_NAME;
 
+type Account = {
+    id: string;
+    name: string;
+    type: string;
+    offbudget: boolean;
+    closed: boolean;
+    category: Category;
+    balance: number;
+}
+
+type Category = {
+    id: string;
+    name: string;
+    group_id: string;
+    is_income: boolean;
+    balance: number;
+}
+
+type CategoryGroup = {
+    id: string;
+    name: string;
+    is_income: boolean;
+    categories: Category[];
+}
+
 console.log(`Actual server: ${ACTUAL_SERVER}`);
 
 (async () => {
-    fs.mkdir("./data", undefined, (err) => {
+    fs.mkdir("./data", undefined, (err: ErrnoException) => {
         if (err) {
             if (err.code === "EEXIST") {
                 return;
@@ -40,9 +65,9 @@ console.log(`Actual server: ${ACTUAL_SERVER}`);
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
     let accounts = (await api.getAccounts())
-        .filter((account) => !account.closed && !account.offbudget);
+        .filter((account: Account) => !account.closed && !account.offbudget);
     for(let i = 0; i < accounts.length; i++) {
-        const balance = await api.getAccountBalance(accounts[i].id);
+        const balance: number = await api.getAccountBalance(accounts[i].id);
         accounts[i].balance = balance;
     }
     let budget = await api.getBudgetMonth(`${year}-${month}`);
@@ -52,7 +77,7 @@ console.log(`Actual server: ${ACTUAL_SERVER}`);
     await api.shutdown();
 
     const ccCategories = budget.categoryGroups
-        .find((group) => group.name === CATEGORY_GROUP_NAME)
+        .find((group: CategoryGroup) => group.name === CATEGORY_GROUP_NAME)
         .categories;
     // match accounts to categories
     const options = {
@@ -70,9 +95,9 @@ console.log(`Actual server: ${ACTUAL_SERVER}`);
     }
     // filter out accounts without categories
     const ccAccounts = accounts
-        .filter((account) => account.category);
+        .filter((account: Account) => account.category);
     console.log(`Found ${ccAccounts.length} accounts with categories`);
-    ccAccounts.forEach((account) => {
+    ccAccounts.forEach((account: Account) => {
         console.log(`${account.name}:`);
         console.log(`\tBalance: ${account.balance / 100}`);
         console.log(`\tCategory Bal: ${account.category.balance / 100}`);
