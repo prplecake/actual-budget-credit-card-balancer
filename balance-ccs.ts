@@ -34,6 +34,27 @@ type CategoryGroup = {
     categories: Category[];
 }
 
+if (!ACTUAL_SERVER) {
+    console.error("Please set the ACTUAL_BUDGET_SERVER environment variable");
+    process.exit(1);
+}
+if (!BUDGET_SYNC_ID) {
+    console.error("Please set the BUDGET_SYNC_ID environment variable");
+    process.exit(1);
+}
+if (!CATEGORY_GROUP_NAME) {
+    console.error("Please set the CATEGORY_GROUP_NAME environment variable");
+    process.exit(1);
+}
+if (!BUDGET_PASSWORD) {
+    console.error("Please set the BUDGET_PASSWORD environment variable");
+    process.exit(1);
+}
+if (!SERVER_PASSWORD) {
+    console.error("Please set the ACTUAL_BUDGET_PASSWORD environment variable");
+    process.exit(1);
+}
+
 console.log(`Actual server: ${ACTUAL_SERVER}`);
 
 (async () => {
